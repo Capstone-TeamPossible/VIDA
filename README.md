@@ -48,6 +48,8 @@ conda activate arc1_env
 비디오 행동 인식을 위한 원본 데이터의 크기는 275GB로 실험 환경에서 직접 다운로드가 필요합니다.
 원본 데이터는 다음 링크에서 접근 가능하며 실험 재현을 위해서는 `preprocessing/` 디렉토리 내 코드를 활용한 전처리가 필요합니다.
 
+전처리된 데이터 예시는 [data-example](data-example)에서 확인 가능합니다.
+
 [Moments in Time Dataset](http://moments.csail.mit.edu/)
 
 ---
