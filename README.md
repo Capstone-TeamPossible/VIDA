@@ -128,8 +128,78 @@ conda activate arc1_env
 
 ## ▶️ Architecture 2: CAFMap
 
-> ✍️ [작성 중]  
-Transformer 기반 캡션 생성 및 semantic attention mapping 구조에 관한 내용은 추후 업데이트될 예정입니다.
+본 아키텍처는 BLIP 기반 캡션과 AudioSet 클래스 간 의미 유사도 기반 매핑을 통해 각 프레임의 오디오 조건을 구성하고, 이를 기반으로 LSTM을 통해 시계열 오디오 피처를 생성합니다. 이후 해당 피처를 활용하여 액션 분류를 수행합니다.
+
+---
+
+### 1. 대표 프레임 기반 캡션 생성
+
+- 필요한 파일:  
+  전처리한 각 클래스 별 RGB 프레임 이미지
+
+- 실행 파일:  
+  `CAFMap/model.ipynb`
+
+- 출력:  
+  `{split}_{class_name}_captions.json`
+  → 각 비디오의 대표 프레임 및 대응 캡션 정보 저장
+
+---
+
+### 2. AudioSet 평균 피처 처리
+
+- 필요한 파일:  
+  [AudioSet TFRecord](https://research.google.com/audioset/download.html) 중 `bal_train/*.tfrecord`
+  `class_labels_indices.csv`, `balanced_train_segments.csv`
+
+- 실행 파일:  
+  `CAFMap/model.ipynb`
+
+- 출력:  
+  `audioset_class_embeddings.npy`
+  → 각 AudioSet 클래스의 평균 오디오 피처 저장
+
+---
+
+### 3. 캡션 → 오디오 피처 매핑 및 condition dictionary 생성
+
+- 필요한 파일:  
+  생성된 캡션 JSON 파일, `audioset_class_embeddings.npy`
+
+- 실행 파일:  
+  `CAFMap/model.ipynb`
+
+- 출력:  
+  `condition_dict.npy`
+  → {(class_name, video_id): {"mask": [18], "features": [18, 128]}}
+
+---
+
+### 4. LSTM 기반 오디오 피처 생성기 학습
+
+- 필요한 파일:  
+  `condition_dict.npy`
+  GT 오디오 `audio_filtered_train.npy`, `audio_filtered_val.npy`
+
+- 실행 파일:  
+  `CAFMap/model.ipynb`
+
+- 출력:  
+  `gen_audio_v1_train.npy', `gengen_audio_v1_val.npy'
+  → 각 비디오에 대해 [18, 128] 시퀀스 생성 결과 저장
+
+---
+
+### 5. 오디오 기반 Action Classification
+
+- 필요한 파일:  
+  `18-audio-train.csv`, `20_class.txt`, `rgb_filtered_*.npy`, `flow_filtered_*.npy`, `audio_filtered_*.npy`, `gen_audio_v1_*.npy`
+
+- 실행 파일:  
+  `CAFMap/model.ipynb`
+
+- 출력:  
+  Ground Truth 기반 Classification 정확도, Generated Audio 기반 Classification 정확도, Vision-only 기준 정확도
 
 ---
 
