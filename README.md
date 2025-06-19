@@ -215,7 +215,7 @@ conda activate arc1_env
 ## 결과
 
 실험 최종 결과물은 논문으로, 첨부된 파일에서 확인 가능합니다.
-[논문 보기](data/sample.csv)
+[논문 보기](VIDA_Vision-Informed-Deep-Audio-Feature-Generation-for-Action-Recognition.pdf)
 
 - **SVDMap**
   
